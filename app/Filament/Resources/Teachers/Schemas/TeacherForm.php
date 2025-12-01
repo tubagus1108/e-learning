@@ -3,9 +3,9 @@
 namespace App\Filament\Resources\Teachers\Schemas;
 
 use App\Models\User;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Fieldset;
-use Filament\Schemas\Components\Select;
-use Filament\Schemas\Components\TextInput;
 use Filament\Schemas\Schema;
 
 class TeacherForm
