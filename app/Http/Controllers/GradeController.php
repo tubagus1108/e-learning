@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Grade;
-use Illuminate\Http\Request;
 
 class GradeController extends Controller
 {
@@ -11,7 +10,7 @@ class GradeController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
+
         $grades = Grade::query()
             ->whereHas('gradable', function ($query) use ($user) {
                 $query->where(function ($q) use ($user) {
@@ -43,8 +42,8 @@ class GradeController extends Controller
             }
         })->map(function ($subjectGrades, $subjectId) {
             $firstGrade = $subjectGrades->first();
-            $subject = $firstGrade->gradable_type === 'App\Models\Submission' 
-                ? $firstGrade->gradable->assignment->subject 
+            $subject = $firstGrade->gradable_type === 'App\Models\Submission'
+                ? $firstGrade->gradable->assignment->subject
                 : $firstGrade->gradable->quiz->subject;
 
             return [

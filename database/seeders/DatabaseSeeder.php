@@ -62,7 +62,7 @@ class DatabaseSeeder extends Seeder
         foreach ([7, 8, 9] as $gradeLevel) {
             foreach (['A', 'B', 'C'] as $className) {
                 $classes->push(ClassRoom::create([
-                    'name' => $gradeLevel . ' ' . $className,
+                    'name' => $gradeLevel.' '.$className,
                     'grade_level' => $gradeLevel,
                     'homeroom_teacher_id' => $teachers->random()->id,
                     'academic_year' => '2024/2025',
@@ -125,13 +125,13 @@ class DatabaseSeeder extends Seeder
             foreach ($subjectList as $subjectData) {
                 $subject = Subject::create([
                     'name' => $subjectData['name'],
-                    'code' => $subjectData['code'] . $class->grade_level . $class->name,
-                    'description' => 'Mata pelajaran ' . $subjectData['name'] . ' untuk kelas ' . $class->name,
+                    'code' => $subjectData['code'].$class->grade_level.$class->name,
+                    'description' => 'Mata pelajaran '.$subjectData['name'].' untuk kelas '.$class->name,
                     'class_id' => $class->id,
                     'teacher_id' => $teachers->random()->id,
                     'schedule_day' => fake()->randomElement($days),
                     'schedule_time' => fake()->time('H:i'),
-                    'room' => 'Ruang ' . fake()->numberBetween(1, 20),
+                    'room' => 'Ruang '.fake()->numberBetween(1, 20),
                 ]);
 
                 $subjects->push($subject);
@@ -151,11 +151,11 @@ class DatabaseSeeder extends Seeder
 
                     Lesson::create([
                         'subject_id' => $subject->id,
-                        'title' => 'Pertemuan ' . $i . ': ' . fake()->sentence(3),
+                        'title' => 'Pertemuan '.$i.': '.fake()->sentence(3),
                         'description' => fake()->paragraph(),
                         'content_type' => $contentType,
-                        'file_url' => $contentType === 'file' ? 'https://example.com/lesson-' . $i . '.pdf' : null,
-                        'video_url' => $contentType === 'video' ? 'https://youtube.com/watch?v=example' . $i : null,
+                        'file_url' => $contentType === 'file' ? 'https://example.com/lesson-'.$i.'.pdf' : null,
+                        'video_url' => $contentType === 'video' ? 'https://youtube.com/watch?v=example'.$i : null,
                         'content_text' => $contentType === 'text' ? fake()->paragraphs(5, true) : null,
                         'order' => $i,
                         'is_published' => true,
@@ -166,19 +166,19 @@ class DatabaseSeeder extends Seeder
                 for ($i = 1; $i <= 3; $i++) {
                     Assignment::create([
                         'subject_id' => $subject->id,
-                        'title' => 'Tugas ' . $i . ': ' . fake()->sentence(3),
+                        'title' => 'Tugas '.$i.': '.fake()->sentence(3),
                         'description' => fake()->paragraph(),
                         'due_date' => now()->addDays(7 * $i),
                         'max_score' => 100,
-                        'file_url' => fake()->boolean(30) ? 'https://example.com/assignment-' . $i . '.pdf' : null,
+                        'file_url' => fake()->boolean(30) ? 'https://example.com/assignment-'.$i.'.pdf' : null,
                     ]);
                 }
 
                 // Create Quiz with Questions and Options
                 $quiz = Quiz::create([
                     'subject_id' => $subject->id,
-                    'title' => 'Kuis ' . $subjectData['name'],
-                    'description' => 'Kuis untuk menguji pemahaman materi ' . $subjectData['name'],
+                    'title' => 'Kuis '.$subjectData['name'],
+                    'description' => 'Kuis untuk menguji pemahaman materi '.$subjectData['name'],
                     'duration_minutes' => 60,
                     'max_attempts' => 2,
                     'passing_score' => 70,
@@ -190,7 +190,7 @@ class DatabaseSeeder extends Seeder
                 for ($q = 1; $q <= 10; $q++) {
                     $question = QuizQuestion::create([
                         'quiz_id' => $quiz->id,
-                        'question_text' => 'Pertanyaan ' . $q . ': ' . fake()->sentence() . '?',
+                        'question_text' => 'Pertanyaan '.$q.': '.fake()->sentence().'?',
                         'question_type' => 'multiple_choice',
                         'points' => 10,
                         'order' => $q,
@@ -200,7 +200,7 @@ class DatabaseSeeder extends Seeder
                     for ($o = 1; $o <= 4; $o++) {
                         QuizOption::create([
                             'quiz_question_id' => $question->id,
-                            'option_text' => 'Opsi ' . chr(64 + $o) . ': ' . fake()->sentence(3),
+                            'option_text' => 'Opsi '.chr(64 + $o).': '.fake()->sentence(3),
                             'is_correct' => $o === 1, // First option is correct
                         ]);
                     }

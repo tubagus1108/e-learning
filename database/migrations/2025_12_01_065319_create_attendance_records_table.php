@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('status', ['present', 'sick', 'permission', 'absent'])->default('present');
             $table->text('notes')->nullable();
             $table->timestamps();
-            
+
             // Prevent duplicate attendance for same student on same day
             $table->unique(['student_id', 'date']);
         });

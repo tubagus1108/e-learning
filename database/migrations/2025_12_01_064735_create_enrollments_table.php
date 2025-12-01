@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('subject_id')->constrained('subjects')->cascadeOnDelete();
             $table->timestamp('enrolled_at')->useCurrent();
             $table->timestamps();
-            
+
             // Prevent duplicate enrollments
             $table->unique(['student_id', 'subject_id']);
         });

@@ -21,7 +21,7 @@ class ClassRoomFactory extends Factory
         $className = fake()->randomElement(['A', 'B', 'C', 'D']);
 
         return [
-            'name' => $gradeLevel . ' ' . $className,
+            'name' => $gradeLevel.' '.$className,
             'grade_level' => $gradeLevel,
             'homeroom_teacher_id' => Teacher::factory(),
             'academic_year' => '2024/2025',

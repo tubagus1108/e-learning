@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +39,7 @@ class RegisterController extends Controller
         if ($request->role === 'student') {
             Student::create([
                 'user_id' => $user->id,
-                'student_id' => 'STD' . str_pad($user->id, 5, '0', STR_PAD_LEFT),
+                'student_id' => 'STD'.str_pad($user->id, 5, '0', STR_PAD_LEFT),
             ]);
         } elseif ($request->role === 'teacher') {
             Teacher::create([

@@ -34,13 +34,13 @@ class SubjectFactory extends Factory
 
         return [
             'name' => $subject['name'],
-            'code' => $subject['code'] . fake()->numberBetween(1, 99),
+            'code' => $subject['code'].fake()->numberBetween(1, 99),
             'description' => fake()->sentence(),
             'class_id' => ClassRoom::factory(),
             'teacher_id' => Teacher::factory(),
             'schedule_day' => fake()->randomElement($days),
             'schedule_time' => fake()->time('H:i'),
-            'room' => 'Ruang ' . fake()->numberBetween(1, 20),
+            'room' => 'Ruang '.fake()->numberBetween(1, 20),
         ];
     }
 }

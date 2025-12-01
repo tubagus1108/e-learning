@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('grade', 2)->nullable(); // A, B, C, D, E
             $table->string('academic_year'); // 2024/2025
             $table->timestamps();
-            
+
             // Prevent duplicate grades for same student in same subject and semester
             $table->unique(['student_id', 'subject_id', 'semester', 'academic_year']);
         });

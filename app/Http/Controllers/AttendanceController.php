@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
-use App\Models\Subject;
 use App\Models\ClassRoom;
 use App\Models\Student;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
@@ -14,17 +14,17 @@ class AttendanceController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
+
         $subjects = Subject::query()
-            ->whereHas('teacher', fn($q) => $q->where('user_id', $user->id))
+            ->whereHas('teacher', fn ($q) => $q->where('user_id', $user->id))
             ->get();
 
         $classes = ClassRoom::query()
-            ->whereHas('subjects.teacher', fn($q) => $q->where('user_id', $user->id))
+            ->whereHas('subjects.teacher', fn ($q) => $q->where('user_id', $user->id))
             ->get();
 
         $attendances = Attendance::query()
-            ->whereHas('subject.teacher', fn($q) => $q->where('user_id', $user->id))
+            ->whereHas('subject.teacher', fn ($q) => $q->where('user_id', $user->id))
             ->with(['student.user', 'student.classRoom', 'subject'])
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
@@ -63,7 +63,7 @@ class AttendanceController extends Controller
     public function getStudentsBySubject(Subject $subject): \Illuminate\Http\JsonResponse
     {
         $students = Student::query()
-            ->whereHas('classRoom.subjects', fn($q) => $q->where('subjects.id', $subject->id))
+            ->whereHas('classRoom.subjects', fn ($q) => $q->where('subjects.id', $subject->id))
             ->with('user')
             ->get();
 

@@ -11,11 +11,11 @@ class AnnouncementController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
+
         $announcements = Announcement::query()
             ->where(function ($q) use ($user) {
                 $q->whereNull('target_role')
-                  ->orWhere('target_role', $user->role);
+                    ->orWhere('target_role', $user->role);
             })
             ->with('user')
             ->orderBy('created_at', 'desc')
@@ -58,7 +58,7 @@ class AnnouncementController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
+
         if ($announcement->user_id !== $user->id) {
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }

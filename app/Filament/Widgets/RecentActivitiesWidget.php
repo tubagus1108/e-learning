@@ -8,8 +8,6 @@ use App\Models\Quiz;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 
 class RecentActivitiesWidget extends TableWidget
 {
@@ -71,17 +69,17 @@ class RecentActivitiesWidget extends TableWidget
                     ->label('Subject')
                     ->searchable()
                     ->sortable(),
-                
+
                 TextColumn::make('title')
                     ->label('Activity')
                     ->searchable()
                     ->sortable(),
-                
+
                 TextColumn::make('due_date')
                     ->label('Due Date')
                     ->date()
                     ->sortable(),
-                
+
                 TextColumn::make('created_at')
                     ->label('Created')
                     ->dateTime()

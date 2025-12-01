@@ -37,7 +37,7 @@ class GradesTable
                 TextColumn::make('score')
                     ->sortable()
                     ->alignCenter()
-                    ->color(fn ($record) => match(true) {
+                    ->color(fn ($record) => match (true) {
                         $record->score >= 90 => 'success',
                         $record->score >= 75 => 'primary',
                         $record->score >= 60 => 'warning',

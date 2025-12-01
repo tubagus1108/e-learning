@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamp('submitted_at')->nullable();
             $table->timestamp('graded_at')->nullable();
             $table->timestamps();
-            
+
             // Prevent duplicate submissions
             $table->unique(['assignment_id', 'student_id']);
         });

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class QuizController extends Controller
 {
@@ -13,13 +13,13 @@ class QuizController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
+
         $quizzes = Quiz::query()
-            ->whereHas('subject.classRoom.students', fn($q) => $q->where('user_id', $user->id))
+            ->whereHas('subject.classRoom.students', fn ($q) => $q->where('user_id', $user->id))
             ->with(['subject'])
             ->withCount('questions')
             ->get();
-        
+
         // Load attempts for each quiz
         $quizzes->each(function ($quiz) use ($user) {
             $quiz->attempt = $quiz->attempts()->where('student_id', $user->student->id)->first();
@@ -31,7 +31,7 @@ class QuizController extends Controller
     public function show(Quiz $quiz): \Illuminate\View\View
     {
         $quiz->load('subject', 'questions');
-        
+
         return view('quizzes.show', compact('quiz'));
     }
 
@@ -39,7 +39,7 @@ class QuizController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
+
         // Check if already attempted
         $existingAttempt = QuizAttempt::query()
             ->where('quiz_id', $quiz->id)
@@ -53,7 +53,7 @@ class QuizController extends Controller
         }
 
         $quiz->load('questions');
-        
+
         return view('quizzes.take', compact('quiz'));
     }
 
@@ -61,7 +61,7 @@ class QuizController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
+
         $validated = $request->validate([
             'answers' => 'required|array',
             'started_at' => 'required|date',
@@ -105,7 +105,7 @@ class QuizController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
+
         $attempt = QuizAttempt::query()
             ->where('quiz_id', $quiz->id)
             ->where('student_id', $user->student->id)

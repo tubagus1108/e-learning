@@ -13,10 +13,10 @@ class AssignmentController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
+
         $assignments = Assignment::query()
-            ->whereHas('subject.classRoom.students', fn($q) => $q->where('user_id', $user->id))
-            ->with(['subject', 'submissions' => fn($q) => $q->where('student_id', $user->student->id)->with('grade')])
+            ->whereHas('subject.classRoom.students', fn ($q) => $q->where('user_id', $user->id))
+            ->with(['subject', 'submissions' => fn ($q) => $q->where('student_id', $user->student->id)->with('grade')])
             ->orderBy('due_date')
             ->get();
 
@@ -27,10 +27,10 @@ class AssignmentController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
+
         $assignment->load([
             'subject',
-            'submissions' => fn($q) => $q->where('student_id', $user->student->id)->with('grade'),
+            'submissions' => fn ($q) => $q->where('student_id', $user->student->id)->with('grade'),
         ]);
 
         return view('assignments.show', compact('assignment'));
@@ -45,7 +45,7 @@ class AssignmentController extends Controller
 
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
+
         $fileUrl = null;
         if ($request->hasFile('file')) {
             $path = $request->file('file')->store('submissions', 'public');

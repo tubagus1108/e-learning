@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
-use App\Models\Grade;
 use App\Models\Attendance;
-use Illuminate\Http\Request;
+use App\Models\Grade;
+use App\Models\Student;
 
 class ParentController extends Controller
 {
@@ -13,7 +12,7 @@ class ParentController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
+
         $children = Student::query()
             ->where('parent_id', $user->id)
             ->with(['user', 'classRoom'])
@@ -39,7 +38,7 @@ class ParentController extends Controller
                     ->get();
 
                 $child->recent_attendance = $attendances->sortByDesc('date')->take(7);
-                
+
                 $totalAttendance = $attendances->count();
                 $presentCount = $attendances->where('status', 'present')->count();
                 $child->attendance_rate = $totalAttendance > 0 ? round(($presentCount / $totalAttendance) * 100) : 0;
@@ -56,7 +55,7 @@ class ParentController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
+
         if ($child->parent_id !== $user->id) {
             abort(403);
         }
