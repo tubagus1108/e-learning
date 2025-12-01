@@ -16,8 +16,7 @@ class AssignmentController extends Controller
         
         $assignments = Assignment::query()
             ->whereHas('subject.classRoom.students', fn($q) => $q->where('user_id', $user->id))
-            ->with(['subject', 'submission' => fn($q) => $q->where('student_id', $user->student->id)])
-            ->withExists(['grade as grade' => fn($q) => $q->whereHas('submission', fn($sq) => $sq->where('student_id', $user->student->id))])
+            ->with(['subject', 'submissions' => fn($q) => $q->where('student_id', $user->student->id)->with('grade')])
             ->orderBy('due_date')
             ->get();
 
@@ -31,7 +30,7 @@ class AssignmentController extends Controller
         
         $assignment->load([
             'subject',
-            'submission' => fn($q) => $q->where('student_id', $user->student->id)->with('grade'),
+            'submissions' => fn($q) => $q->where('student_id', $user->student->id)->with('grade'),
         ]);
 
         return view('assignments.show', compact('assignment'));

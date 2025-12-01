@@ -33,7 +33,7 @@
     <div class="space-y-4">
         @forelse($assignments ?? [] as $assignment)
             @php
-                $isSubmitted = isset($assignment->submission);
+                $isSubmitted = $assignment->submissions->isNotEmpty();
                 $isOverdue = $assignment->due_date->isPast() && !$isSubmitted;
                 $isPending = !$isSubmitted && !$isOverdue;
                 $daysUntilDue = now()->diffInDays($assignment->due_date, false);

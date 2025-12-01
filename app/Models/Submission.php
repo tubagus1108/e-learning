@@ -38,4 +38,14 @@ class Submission extends Model
     {
         return $this->belongsTo(Student::class);
     }
+
+    public function grade(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    {
+        return $this->morphOne(Grade::class, 'gradable');
+    }
+
+    public function grades(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(Grade::class, 'gradable');
+    }
 }

@@ -51,6 +51,11 @@ class Quiz extends Model
         return $this->hasMany(QuizAttempt::class);
     }
 
+    public function attempt(): HasMany
+    {
+        return $this->hasMany(QuizAttempt::class);
+    }
+
     public function totalPoints(): Attribute
     {
         return Attribute::make(

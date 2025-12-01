@@ -32,7 +32,8 @@
                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ $assignment->subject->name }}</p>
                 </div>
                 @php
-                    $isSubmitted = isset($assignment->submission);
+                    $isSubmitted = $assignment->submissions->isNotEmpty();
+                    $submission = $assignment->submissions->first();
                     $isOverdue = $assignment->due_date->isPast() && !$isSubmitted;
                 @endphp
                 <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium {{ $isSubmitted ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' : ($isOverdue ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400') }}">
@@ -82,20 +83,20 @@
             <div class="px-6 py-5 space-y-4">
                 <div>
                     <h3 class="text-sm font-medium text-gray-900 dark:text-white">Submitted At</h3>
-                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ $assignment->submission->submitted_at->format('F d, Y \a\t h:i A') }}</p>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ $submission->submitted_at->format('F d, Y \a\t h:i A') }}</p>
                 </div>
 
-                @if($assignment->submission->content)
+                @if($submission->content)
                     <div>
                         <h3 class="text-sm font-medium text-gray-900 dark:text-white">Answer</h3>
-                        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 whitespace-pre-wrap">{{ $assignment->submission->content }}</p>
+                        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 whitespace-pre-wrap">{{ $submission->content }}</p>
                     </div>
                 @endif
 
-                @if($assignment->submission->file_url)
+                @if($submission->file_url)
                     <div>
                         <h3 class="text-sm font-medium text-gray-900 dark:text-white">Submitted File</h3>
-                        <a href="{{ $assignment->submission->file_url }}" download class="mt-2 inline-flex items-center rounded-md bg-white dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <a href="{{ $submission->file_url }}" download class="mt-2 inline-flex items-center rounded-md bg-white dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600">
                             <svg class="mr-2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                             </svg>

@@ -37,4 +37,14 @@ class Assignment extends Model
     {
         return $this->hasMany(Submission::class);
     }
+
+    public function submission(): HasMany
+    {
+        return $this->hasMany(Submission::class);
+    }
+
+    public function grade(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(Grade::class, 'gradable');
+    }
 }

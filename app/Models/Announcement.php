@@ -11,22 +11,20 @@ class Announcement extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'title',
         'content',
-        'author_id',
+        'priority',
         'target_role',
-        'is_published',
     ];
 
-    protected function casts(): array
+    public function user(): BelongsTo
     {
-        return [
-            'is_published' => 'boolean',
-        ];
+        return $this->belongsTo(User::class);
     }
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

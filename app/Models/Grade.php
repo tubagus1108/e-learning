@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Grade extends Model
 {
@@ -13,21 +14,18 @@ class Grade extends Model
     protected $fillable = [
         'student_id',
         'subject_id',
-        'semester',
-        'academic_year',
-        'midterm_score',
-        'final_score',
-        'total_score',
-        'grade',
+        'gradable_type',
+        'gradable_id',
+        'score',
+        'feedback',
+        'graded_at',
     ];
 
     protected function casts(): array
     {
         return [
-            'semester' => 'integer',
-            'midterm_score' => 'decimal:2',
-            'final_score' => 'decimal:2',
-            'total_score' => 'decimal:2',
+            'score' => 'decimal:2',
+            'graded_at' => 'datetime',
         ];
     }
 
@@ -39,5 +37,15 @@ class Grade extends Model
     public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
+    }
+
+    public function gradable(): MorphTo
+    {
+        return $this->morphTo();
+    }
+
+    public function submission(): BelongsTo
+    {
+        return $this->belongsTo(Submission::class, 'gradable_id')->where('gradable_type', Submission::class);
     }
 }
