@@ -291,4 +291,3 @@ function confirmSubmit() {
 }
 </script>
 @endpush
-@endsection
