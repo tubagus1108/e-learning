@@ -99,6 +99,77 @@
     </form>
 </div>
 
+<!-- Time's Up Modal -->
+<div id="timesUpModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="sm:flex sm:items-start">
+                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/20 sm:mx-0 sm:h-10 sm:w-10">
+                        <svg class="h-6 w-6 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                            Time's Up!
+                        </h3>
+                        <div class="mt-2">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                Your quiz time has expired. Your answers will be submitted automatically.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button type="button" onclick="document.getElementById('quizForm').submit()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    Submit Now
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Submit Quiz Modal -->
+<div id="submitQuizModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="hideSubmitQuizModal()"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="sm:flex sm:items-start">
+                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 dark:bg-green-900/20 sm:mx-0 sm:h-10 sm:w-10">
+                        <svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                        </svg>
+                    </div>
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modal-title">
+                            Submit Quiz?
+                        </h3>
+                        <div class="mt-2">
+                            <p class="text-sm text-gray-500 dark:text-gray-400" id="submitModalMessage">
+                                Are you sure you want to submit your quiz? You cannot change your answers after submission.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button type="button" onclick="confirmSubmit()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    Submit Quiz
+                </button>
+                <button type="button" onclick="hideSubmitQuizModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
 let currentQuestion = 1;
@@ -126,8 +197,7 @@ function startTimer() {
         
         if (timeRemaining <= 0) {
             clearInterval(timerInterval);
-            alert('Time is up! Your quiz will be submitted automatically.');
-            document.getElementById('quizForm').submit();
+            document.getElementById('timesUpModal').classList.remove('hidden');
         }
     }, 1000);
 }
@@ -190,18 +260,33 @@ function previousQuestion() {
 function submitQuiz() {
     const form = document.getElementById('quizForm');
     const formData = new FormData(form);
-    const answeredQuestions = formData.getAll('answers').filter(a => a).length;
+    const answeredQuestions = formData.getAll('answers[' + currentQuestion + ']').length;
     
-    if (answeredQuestions < totalQuestions) {
-        if (!confirm(`You have only answered ${answeredQuestions} out of ${totalQuestions} questions. Submit anyway?`)) {
-            return;
-        }
+    // Count total answered questions
+    let totalAnswered = 0;
+    for (let i = 1; i <= totalQuestions; i++) {
+        const answer = form.querySelector(`input[name="answers[${i}]"]:checked`);
+        if (answer) totalAnswered++;
     }
     
-    if (confirm('Are you sure you want to submit your quiz? You cannot change your answers after submission.')) {
-        clearInterval(timerInterval);
-        form.submit();
+    if (totalAnswered < totalQuestions) {
+        document.getElementById('submitModalMessage').textContent = 
+            `You have only answered ${totalAnswered} out of ${totalQuestions} questions. Are you sure you want to submit anyway? You cannot change your answers after submission.`;
+    } else {
+        document.getElementById('submitModalMessage').textContent = 
+            'Are you sure you want to submit your quiz? You cannot change your answers after submission.';
     }
+    
+    document.getElementById('submitQuizModal').classList.remove('hidden');
+}
+
+function hideSubmitQuizModal() {
+    document.getElementById('submitQuizModal').classList.add('hidden');
+}
+
+function confirmSubmit() {
+    clearInterval(timerInterval);
+    document.getElementById('quizForm').submit();
 }
 </script>
 @endpush
