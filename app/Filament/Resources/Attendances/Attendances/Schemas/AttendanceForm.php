@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Attendances\Attendances\Schemas;
 
-use Filament\Schemas\Components\Select;
-use Filament\Schemas\Components\DatePicker;
-use Filament\Schemas\Components\Textarea;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
 
 class AttendanceForm
