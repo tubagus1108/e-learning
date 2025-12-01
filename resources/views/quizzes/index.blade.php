@@ -15,8 +15,8 @@
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         @forelse($quizzes ?? [] as $quiz)
             @php
-                $hasAttempt = isset($quiz->attempt);
-                $isPassed = $hasAttempt && ($quiz->attempt->score ?? 0) >= 70;
+                $hasAttempt = $quiz->attempt !== null;
+                $isPassed = $hasAttempt && $quiz->attempt->score >= 70;
             @endphp
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition-shadow overflow-hidden">
                 <!-- Quiz Header -->

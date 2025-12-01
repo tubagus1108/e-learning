@@ -16,9 +16,14 @@ class QuizController extends Controller
         
         $quizzes = Quiz::query()
             ->whereHas('subject.classRoom.students', fn($q) => $q->where('user_id', $user->id))
-            ->with(['subject', 'attempt' => fn($q) => $q->where('student_id', $user->student->id)])
+            ->with(['subject'])
             ->withCount('questions')
             ->get();
+        
+        // Load attempts for each quiz
+        $quizzes->each(function ($quiz) use ($user) {
+            $quiz->attempt = $quiz->attempts()->where('student_id', $user->student->id)->first();
+        });
 
         return view('quizzes.index', compact('quizzes'));
     }
