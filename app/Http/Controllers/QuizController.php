@@ -52,7 +52,7 @@ class QuizController extends Controller
                 ->with('info', 'You have already taken this quiz.');
         }
 
-        $quiz->load('questions');
+        $quiz->load('questions.options');
 
         return view('quizzes.take', compact('quiz'));
     }
@@ -68,14 +68,19 @@ class QuizController extends Controller
         ]);
 
         // Calculate score
-        $quiz->load('questions');
+        $quiz->load('questions.options');
         $correctAnswers = 0;
         $totalQuestions = $quiz->questions->count();
 
         foreach ($quiz->questions as $question) {
-            $userAnswer = $validated['answers'][$question->id] ?? null;
-            if ($userAnswer === $question->correct_answer) {
-                $correctAnswers++;
+            $userAnswerOptionId = $validated['answers'][$question->id] ?? null;
+
+            if ($userAnswerOptionId) {
+                // Check if the selected option is correct
+                $selectedOption = $question->options->firstWhere('id', $userAnswerOptionId);
+                if ($selectedOption && $selectedOption->is_correct) {
+                    $correctAnswers++;
+                }
             }
         }
 
@@ -111,7 +116,7 @@ class QuizController extends Controller
             ->where('student_id', $user->student->id)
             ->firstOrFail();
 
-        $quiz->load('subject', 'questions');
+        $quiz->load('subject', 'questions.options');
 
         return view('quizzes.result', compact('quiz', 'attempt'));
     }

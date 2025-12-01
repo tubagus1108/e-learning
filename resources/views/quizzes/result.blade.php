@@ -65,8 +65,10 @@
         
         @foreach($quiz->questions as $index => $question)
             @php
-                $userAnswer = $attempt->answers[$question->id] ?? null;
-                $isCorrect = $userAnswer === $question->correct_answer;
+                $userAnswerOptionId = $attempt->answers[$question->id] ?? null;
+                $userAnswerOption = $question->options->firstWhere('id', $userAnswerOptionId);
+                $correctOption = $question->options->firstWhere('is_correct', true);
+                $isCorrect = $userAnswerOption && $userAnswerOption->is_correct;
             @endphp
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                 <div class="flex items-start justify-between mb-4">
@@ -80,63 +82,32 @@
 
                 <p class="text-gray-700 dark:text-gray-300 mb-4">{{ $question->question_text }}</p>
 
-                @if($question->type === 'multiple_choice')
-                    <div class="space-y-2">
-                        @foreach(json_decode($question->options) as $optionIndex => $option)
-                            @php
-                                $optionLetter = chr(65 + $optionIndex);
-                                $isUserAnswer = $userAnswer === $optionLetter;
-                                $isCorrectAnswer = $question->correct_answer === $optionLetter;
-                            @endphp
-                            <div class="flex items-start p-3 rounded-lg {{ $isCorrectAnswer ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' : ($isUserAnswer ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800' : 'bg-gray-50 dark:bg-gray-700') }}">
-                                <span class="font-medium {{ $isCorrectAnswer ? 'text-green-700 dark:text-green-300' : ($isUserAnswer ? 'text-red-700 dark:text-red-300' : 'text-gray-700 dark:text-gray-300') }}">
-                                    {{ $optionLetter }}.
-                                </span>
-                                <span class="ml-2 {{ $isCorrectAnswer ? 'text-green-700 dark:text-green-300' : ($isUserAnswer ? 'text-red-700 dark:text-red-300' : 'text-gray-700 dark:text-gray-300') }}">
-                                    {{ $option }}
-                                    @if($isCorrectAnswer)
-                                        <svg class="inline h-4 w-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-                                        </svg>
-                                    @elseif($isUserAnswer)
-                                        <svg class="inline h-4 w-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
-                                        </svg>
-                                    @endif
-                                </span>
-                            </div>
-                        @endforeach
-                    </div>
-                @elseif($question->type === 'true_false')
-                    <div class="space-y-2">
-                        @foreach(['True', 'False'] as $option)
-                            @php
-                                $isUserAnswer = $userAnswer === $option;
-                                $isCorrectAnswer = $question->correct_answer === $option;
-                            @endphp
-                            <div class="flex items-start p-3 rounded-lg {{ $isCorrectAnswer ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' : ($isUserAnswer ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800' : 'bg-gray-50 dark:bg-gray-700') }}">
-                                <span class="font-medium {{ $isCorrectAnswer ? 'text-green-700 dark:text-green-300' : ($isUserAnswer ? 'text-red-700 dark:text-red-300' : 'text-gray-700 dark:text-gray-300') }}">
-                                    {{ $option }}
-                                    @if($isCorrectAnswer)
-                                        <svg class="inline h-4 w-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-                                        </svg>
-                                    @elseif($isUserAnswer)
-                                        <svg class="inline h-4 w-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
-                                        </svg>
-                                    @endif
-                                </span>
-                            </div>
-                        @endforeach
-                    </div>
-                @endif
+                <div class="space-y-2">
+                    @foreach($question->options as $option)
+                        @php
+                            $isUserAnswer = $userAnswerOption && $userAnswerOption->id === $option->id;
+                            $isCorrectAnswer = $option->is_correct;
+                        @endphp
+                        <div class="flex items-start p-3 rounded-lg {{ $isCorrectAnswer ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' : ($isUserAnswer ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800' : 'bg-gray-50 dark:bg-gray-700') }}">
+                            <span class="flex-1 {{ $isCorrectAnswer ? 'text-green-700 dark:text-green-300' : ($isUserAnswer ? 'text-red-700 dark:text-red-300' : 'text-gray-700 dark:text-gray-300') }}">
+                                {{ $option->option_text }}
+                                @if($isCorrectAnswer)
+                                    <svg class="inline h-4 w-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="text-xs font-medium ml-1">(Correct Answer)</span>
+                                @elseif($isUserAnswer)
+                                    <svg class="inline h-4 w-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="text-xs font-medium ml-1">(Your Answer)</span>
+                                @endif
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
 
-                @if(!$isCorrect && $userAnswer)
-                    <div class="mt-3 text-sm text-gray-600 dark:text-gray-400">
-                        <strong>Your answer:</strong> {{ $userAnswer }}
-                    </div>
-                @elseif(!$userAnswer)
+                @if(!$userAnswerOption)
                     <div class="mt-3 text-sm text-red-600 dark:text-red-400">
                         <strong>You did not answer this question</strong>
                     </div>

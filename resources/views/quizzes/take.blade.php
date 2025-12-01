@@ -39,47 +39,22 @@
 
                     <p class="text-base text-gray-700 dark:text-gray-300 mb-6">{{ $question->question_text }}</p>
 
-                    @if($question->type === 'multiple_choice')
-                        <div class="space-y-3">
-                            @foreach(json_decode($question->options) as $optionIndex => $option)
-                                <label class="flex items-start p-4 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                    <input 
-                                        type="radio" 
-                                        name="answers[{{ $question->id }}]" 
-                                        value="{{ chr(65 + $optionIndex) }}"
-                                        class="mt-0.5 h-4 w-4 text-indigo-600 focus:ring-indigo-600 dark:bg-gray-700 dark:border-gray-600"
-                                        required
-                                    >
-                                    <span class="ml-3 block text-sm text-gray-700 dark:text-gray-300">
-                                        <span class="font-medium">{{ chr(65 + $optionIndex) }}.</span> {{ $option }}
-                                    </span>
-                                </label>
-                            @endforeach
-                        </div>
-                    @elseif($question->type === 'true_false')
-                        <div class="space-y-3">
+                    <div class="space-y-3">
+                        @foreach($question->options as $option)
                             <label class="flex items-start p-4 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                 <input 
                                     type="radio" 
                                     name="answers[{{ $question->id }}]" 
-                                    value="True"
+                                    value="{{ $option->id }}"
                                     class="mt-0.5 h-4 w-4 text-indigo-600 focus:ring-indigo-600 dark:bg-gray-700 dark:border-gray-600"
                                     required
                                 >
-                                <span class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">True</span>
+                                <span class="ml-3 block text-sm text-gray-700 dark:text-gray-300">
+                                    {{ $option->option_text }}
+                                </span>
                             </label>
-                            <label class="flex items-start p-4 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                <input 
-                                    type="radio" 
-                                    name="answers[{{ $question->id }}]" 
-                                    value="False"
-                                    class="mt-0.5 h-4 w-4 text-indigo-600 focus:ring-indigo-600 dark:bg-gray-700 dark:border-gray-600"
-                                    required
-                                >
-                                <span class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">False</span>
-                            </label>
-                        </div>
-                    @endif
+                        @endforeach
+                    </div>
 
                     <!-- Navigation Buttons -->
                     <div class="mt-6 flex items-center justify-between">
