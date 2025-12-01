@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Attendances\Attendances\Schemas;
 
+use Filament\Schemas\Components\Select;
+use Filament\Schemas\Components\DatePicker;
+use Filament\Schemas\Components\Textarea;
 use Filament\Schemas\Schema;
 
 class AttendanceForm
@@ -10,7 +13,33 @@ class AttendanceForm
     {
         return $schema
             ->components([
-                //
+                Select::make('student_id')
+                    ->label('Student')
+                    ->relationship('student.user', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+                Select::make('subject_id')
+                    ->label('Subject')
+                    ->relationship('subject', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+                DatePicker::make('date')
+                    ->required()
+                    ->default(now())
+                    ->native(false),
+                Select::make('status')
+                    ->options([
+                        'present' => 'Present',
+                        'absent' => 'Absent',
+                        'late' => 'Late',
+                    ])
+                    ->required()
+                    ->default('present'),
+                Textarea::make('notes')
+                    ->rows(2)
+                    ->maxLength(500),
             ]);
     }
 }

@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources\Quizzes\Quizzes\Schemas;
 
+use Filament\Schemas\Components\TextInput;
+use Filament\Schemas\Components\Textarea;
+use Filament\Schemas\Components\Select;
+use Filament\Schemas\Components\Toggle;
 use Filament\Schemas\Schema;
 
 class QuizForm
@@ -10,7 +14,32 @@ class QuizForm
     {
         return $schema
             ->components([
-                //
+                Select::make('subject_id')
+                    ->label('Subject')
+                    ->relationship('subject', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+                TextInput::make('title')
+                    ->required()
+                    ->maxLength(255),
+                Textarea::make('description')
+                    ->rows(3)
+                    ->maxLength(1000),
+                TextInput::make('duration')
+                    ->label('Duration (minutes)')
+                    ->numeric()
+                    ->required()
+                    ->minValue(1)
+                    ->default(60),
+                TextInput::make('passing_score')
+                    ->numeric()
+                    ->required()
+                    ->minValue(0)
+                    ->maxValue(100)
+                    ->default(75),
+                Toggle::make('is_active')
+                    ->default(true),
             ]);
     }
 }
