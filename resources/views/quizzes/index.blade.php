@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Quizzes')
+@section('title', 'Kuis')
 
 @section('content')
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="sm:flex sm:items-center sm:justify-between mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">My Quizzes</h1>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Test your knowledge with quizzes</p>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Kuis Saya</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Uji pengetahuan Anda dengan kuis</p>
         </div>
     </div>
 
@@ -24,7 +24,7 @@
                     <div>
                         <h3 class="text-lg font-bold text-white">{{ $quiz->title }}</h3>
                         @if($hasAttempt)
-                            <p class="mt-1 text-sm text-white/90">Score: {{ $quiz->attempt->score }}/100</p>
+                            <p class="mt-1 text-sm text-white/90">Nilai: {{ $quiz->attempt->score }}/100</p>
                         @endif
                     </div>
                     @if($hasAttempt)
@@ -50,25 +50,25 @@
                             <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
                             </svg>
-                            {{ $quiz->questions_count ?? 0 }} questions
+                            {{ $quiz->questions_count ?? 0 }} soal
                         </div>
 
                         <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                             <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            {{ $quiz->duration_minutes }} minutes
+                            {{ $quiz->duration_minutes }} menit
                         </div>
                     </div>
 
                     <div class="mt-6">
                         @if($hasAttempt)
                             <a href="{{ route('quizzes.result', $quiz->id) }}" class="block w-full text-center rounded-md {{ $isPassed ? 'bg-green-600 hover:bg-green-500' : 'bg-gray-600 hover:bg-gray-500' }} px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm">
-                                View Results
+                                Lihat Hasil
                             </a>
                         @else
                             <a href="{{ route('quizzes.show', $quiz->id) }}" class="block w-full text-center rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
-                                Start Quiz
+                                Mulai Kuis
                             </a>
                         @endif
                     </div>
@@ -79,8 +79,8 @@
                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No quizzes available</h3>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Check back later for new quizzes.</p>
+                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Tidak ada kuis tersedia</h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Periksa kembali nanti untuk kuis baru.</p>
             </div>
         @endforelse
     </div>

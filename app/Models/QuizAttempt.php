@@ -17,9 +17,12 @@ class QuizAttempt extends Model
         'student_id',
         'started_at',
         'submitted_at',
+        'completed_at',
         'score',
         'total_questions',
         'correct_answers',
+        'answers',
+        'time_taken',
     ];
 
     protected function casts(): array
@@ -27,9 +30,12 @@ class QuizAttempt extends Model
         return [
             'started_at' => 'datetime',
             'submitted_at' => 'datetime',
+            'completed_at' => 'datetime',
             'score' => 'integer',
             'total_questions' => 'integer',
             'correct_answers' => 'integer',
+            'time_taken' => 'integer',
+            'answers' => 'array',
         ];
     }
 
@@ -43,7 +49,7 @@ class QuizAttempt extends Model
         return $this->belongsTo(Student::class);
     }
 
-    public function answers(): HasMany
+    public function quizAnswers(): HasMany
     {
         return $this->hasMany(QuizAnswer::class);
     }
@@ -69,7 +75,7 @@ class QuizAttempt extends Model
         $totalScore = 0;
         $correctCount = 0;
 
-        foreach ($this->answers as $answer) {
+        foreach ($this->quizAnswers as $answer) {
             if ($answer->is_correct) {
                 $totalScore += $answer->question->points;
                 $correctCount++;
@@ -79,7 +85,7 @@ class QuizAttempt extends Model
         $this->update([
             'score' => $totalScore,
             'correct_answers' => $correctCount,
-            'total_questions' => $this->answers()->count(),
+            'total_questions' => $this->quizAnswers()->count(),
         ]);
     }
 }

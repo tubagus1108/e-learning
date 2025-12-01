@@ -6,6 +6,7 @@ use App\Models\Quiz;
 use App\Models\QuizAttempt;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class QuizController extends Controller
 {
@@ -21,9 +22,11 @@ class QuizController extends Controller
             ->get();
 
         // Load attempts for each quiz
-        $quizzes->each(function ($quiz) use ($user) {
-            $quiz->attempt = $quiz->attempts()->where('student_id', $user->student->id)->first();
-        });
+        if ($user->student) {
+            $quizzes->each(function ($quiz) use ($user) {
+                $quiz->attempt = $quiz->attempts()->where('student_id', $user->student->id)->first();
+            });
+        }
 
         return view('quizzes.index', compact('quizzes'));
     }
@@ -39,6 +42,12 @@ class QuizController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
+
+        if (! $user->student) {
+            return redirect()
+                ->route('quizzes.index')
+                ->with('error', 'Only students can take quizzes.');
+        }
 
         // Check if already attempted
         $existingAttempt = QuizAttempt::query()
@@ -62,54 +71,91 @@ class QuizController extends Controller
         /** @var \App\Models\User $user */
         $user = auth()->user();
 
-        $validated = $request->validate([
-            'answers' => 'required|array',
-            'started_at' => 'required|date',
-        ]);
-
-        // Calculate score
-        $quiz->load('questions.options');
-        $correctAnswers = 0;
-        $totalQuestions = $quiz->questions->count();
-
-        foreach ($quiz->questions as $question) {
-            $userAnswerOptionId = $validated['answers'][$question->id] ?? null;
-
-            if ($userAnswerOptionId) {
-                // Check if the selected option is correct
-                $selectedOption = $question->options->firstWhere('id', $userAnswerOptionId);
-                if ($selectedOption && $selectedOption->is_correct) {
-                    $correctAnswers++;
-                }
-            }
+        if (! $user->student) {
+            return redirect()
+                ->route('quizzes.index')
+                ->with('error', 'Only students can submit quizzes.');
         }
 
-        $score = $totalQuestions > 0 ? round(($correctAnswers / $totalQuestions) * 100) : 0;
+        try {
+            $validated = $request->validate([
+                'answers' => 'required|array',
+                'started_at' => 'required|date',
+            ]);
 
-        // Calculate time taken
-        $startedAt = Carbon::parse($validated['started_at']);
-        $timeTaken = now()->diffInSeconds($startedAt);
+            // Log submitted answers for debugging
+            Log::info('Quiz submission', [
+                'quiz_id' => $quiz->id,
+                'student_id' => $user->student->id,
+                'answers' => $validated['answers'],
+            ]);
 
-        // Create quiz attempt
-        QuizAttempt::create([
-            'quiz_id' => $quiz->id,
-            'student_id' => $user->student->id,
-            'score' => $score,
-            'answers' => $validated['answers'],
-            'correct_answers' => $correctAnswers,
-            'time_taken' => $timeTaken,
-            'completed_at' => now(),
-        ]);
+            // Calculate score
+            $quiz->load('questions.options');
+            $correctAnswers = 0;
+            $totalQuestions = $quiz->questions->count();
 
-        return redirect()
-            ->route('quizzes.result', $quiz->id)
-            ->with('success', 'Quiz submitted successfully!');
+            foreach ($quiz->questions as $question) {
+                $userAnswerOptionId = $validated['answers'][$question->id] ?? null;
+
+                if ($userAnswerOptionId) {
+                    // Check if the selected option is correct
+                    $selectedOption = $question->options->firstWhere('id', $userAnswerOptionId);
+                    if ($selectedOption && $selectedOption->is_correct) {
+                        $correctAnswers++;
+                    }
+                }
+            }
+
+            $score = $totalQuestions > 0 ? round(($correctAnswers / $totalQuestions) * 100) : 0;
+
+            // Calculate time taken
+            $startedAt = Carbon::parse($validated['started_at']);
+            $timeTaken = now()->diffInSeconds($startedAt);
+
+            // Create quiz attempt
+            $attempt = QuizAttempt::create([
+                'quiz_id' => $quiz->id,
+                'student_id' => $user->student->id,
+                'score' => $score,
+                'answers' => $validated['answers'],
+                'correct_answers' => $correctAnswers,
+                'time_taken' => $timeTaken,
+                'completed_at' => now(),
+            ]);
+
+            Log::info('Quiz attempt created', [
+                'attempt_id' => $attempt->id,
+                'score' => $score,
+                'correct_answers' => $correctAnswers,
+                'total_questions' => $totalQuestions,
+            ]);
+
+            return redirect()
+                ->route('quizzes.result', $quiz->id)
+                ->with('success', 'Quiz submitted successfully!');
+        } catch (\Exception $e) {
+            Log::error('Quiz submission error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return redirect()
+                ->route('quizzes.show', $quiz->id)
+                ->with('error', 'Failed to submit quiz: '.$e->getMessage());
+        }
     }
 
-    public function result(Quiz $quiz): \Illuminate\View\View
+    public function result(Quiz $quiz): \Illuminate\View\View|\Illuminate\Http\RedirectResponse
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
+
+        if (! $user->student) {
+            return redirect()
+                ->route('quizzes.index')
+                ->with('error', 'Only students can view quiz results.');
+        }
 
         $attempt = QuizAttempt::query()
             ->where('quiz_id', $quiz->id)

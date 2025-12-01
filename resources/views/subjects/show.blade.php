@@ -16,19 +16,19 @@
                             <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                             </svg>
-                            {{ $subject->teacher->user->name ?? 'No Teacher' }}
+                            {{ $subject->teacher->user->name ?? 'Tidak Ada Guru' }}
                         </div>
                         <div class="flex items-center">
                             <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            {{ $subject->schedule_day ?? 'Not scheduled' }} • {{ $subject->schedule_time ?? 'N/A' }}
+                            {{ $subject->schedule_day ?? 'Belum dijadwalkan' }} • {{ $subject->schedule_time ?? 'Tidak ada' }}
                         </div>
                     </div>
                 </div>
                 <div class="mt-6 sm:mt-0">
                     <a href="{{ route('subjects.index') }}" class="inline-flex items-center rounded-md bg-white/20 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-white/30">
-                        ← Back to Subjects
+                        ← Kembali ke Mata Pelajaran
                     </a>
                 </div>
             </div>
@@ -39,14 +39,14 @@
     <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
         <nav class="-mb-px flex space-x-8">
             <button onclick="showTab('lessons')" id="tab-lessons" class="tab-button border-b-2 border-indigo-500 py-4 px-1 text-sm font-medium text-indigo-600 dark:text-indigo-400">
-                Lessons
+                Pelajaran
             </button>
             @if(auth()->user()->role === 'student')
                 <button onclick="showTab('assignments')" id="tab-assignments" class="tab-button border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
-                    Assignments
+                    Tugas
                 </button>
                 <button onclick="showTab('quizzes')" id="tab-quizzes" class="tab-button border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
-                    Quizzes
+                    Kuis
                 </button>
             @endif
         </nav>
@@ -109,8 +109,8 @@
                     <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No lessons yet</h3>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Lessons will appear here when added.</p>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Belum ada pelajaran</h3>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Pelajaran akan muncul di sini saat ditambahkan.</p>
                 </div>
             @endforelse
         </div>
@@ -127,14 +127,14 @@
                                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ $assignment->title }}</h3>
                                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ Str::limit($assignment->description, 150) }}</p>
                                 <div class="mt-3 flex items-center gap-4 text-sm">
-                                    <span class="text-gray-600 dark:text-gray-400">Due: {{ $assignment->due_date->format('M d, Y') }}</span>
+                                    <span class="text-gray-600 dark:text-gray-400">Tenggat: {{ $assignment->due_date->format('M d, Y') }}</span>
                                     @if($assignment->submission)
                                         <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
-                                            Submitted
+                                            Sudah Dikumpulkan
                                         </span>
                                     @else
                                         <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {{ $assignment->due_date->isPast() ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400' }}">
-                                            {{ $assignment->due_date->isPast() ? 'Overdue' : 'Pending' }}
+                                            {{ $assignment->due_date->isPast() ? 'Terlambat' : 'Belum Dikumpulkan' }}
                                         </span>
                                     @endif
                                 </div>
@@ -146,7 +146,7 @@
                     </a>
                 @empty
                     <div class="text-center py-12">
-                        <p class="text-sm text-gray-500 dark:text-gray-400">No assignments available</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Tidak ada tugas tersedia</p>
                     </div>
                 @endforelse
             </div>
@@ -162,10 +162,10 @@
                                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ $quiz->title }}</h3>
                                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ Str::limit($quiz->description, 150) }}</p>
                                 <div class="mt-3 flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-                                    <span>{{ $quiz->questions_count ?? 0 }} questions</span>
-                                    <span>{{ $quiz->time_limit }} minutes</span>
+                                    <span>{{ $quiz->questions_count ?? 0 }} soal</span>
+                                    <span>{{ $quiz->time_limit }} menit</span>
                                     @if($quiz->attempts_count > 0)
-                                        <span class="text-green-600 dark:text-green-400">Completed</span>
+                                        <span class="text-green-600 dark:text-green-400">Selesai</span>
                                     @endif
                                 </div>
                             </div>
@@ -176,7 +176,7 @@
                     </a>
                 @empty
                     <div class="text-center py-12">
-                        <p class="text-sm text-gray-500 dark:text-gray-400">No quizzes available</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Tidak ada kuis tersedia</p>
                     </div>
                 @endforelse
             </div>

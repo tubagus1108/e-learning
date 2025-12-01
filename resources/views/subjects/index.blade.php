@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Subjects')
+@section('title', 'Mata Pelajaran')
 
 @section('content')
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="sm:flex sm:items-center sm:justify-between mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">My Subjects</h1>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mata Pelajaran Saya</h1>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                {{ auth()->user()->role === 'teacher' ? 'Subjects you are teaching' : 'Subjects you are enrolled in' }}
+                {{ auth()->user()->role === 'teacher' ? 'Mata pelajaran yang Anda ajar' : 'Mata pelajaran yang Anda ikuti' }}
             </p>
         </div>
     </div>
@@ -30,21 +30,21 @@
                             <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                             </svg>
-                            <span>{{ $subject->teacher->user->name ?? 'No Teacher' }}</span>
+                            <span>{{ $subject->teacher->user->name ?? 'Tidak Ada Guru' }}</span>
                         </div>
 
                         <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
                             <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span>{{ $subject->schedule_day ?? 'Not scheduled' }} • {{ $subject->schedule_time ?? 'N/A' }}</span>
+                            <span>{{ $subject->schedule_day ?? 'Belum dijadwalkan' }} • {{ $subject->schedule_time ?? 'Tidak ada' }}</span>
                         </div>
 
                         <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
                             <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                             </svg>
-                            <span>{{ $subject->lessons_count ?? 0 }} lessons</span>
+                            <span>{{ $subject->lessons_count ?? 0 }} pelajaran</span>
                         </div>
 
                         @if(auth()->user()->role === 'student')
@@ -52,7 +52,7 @@
                                 <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
                                 </svg>
-                                <span>{{ $subject->assignments_count ?? 0 }} assignments</span>
+                                <span>{{ $subject->assignments_count ?? 0 }} tugas</span>
                             </div>
                         @endif
                     </div>
@@ -60,10 +60,10 @@
                     <div class="mt-6">
                         <div class="flex items-center justify-between text-sm">
                             <span class="text-indigo-600 dark:text-indigo-400 font-medium group-hover:text-indigo-500">
-                                View Details →
+                                Lihat Detail →
                             </span>
                             @if(auth()->user()->role === 'student' && isset($subject->progress))
-                                <span class="text-gray-600 dark:text-gray-400">{{ $subject->progress }}% complete</span>
+                                <span class="text-gray-600 dark:text-gray-400">{{ $subject->progress }}% selesai</span>
                             @endif
                         </div>
                     </div>
@@ -74,9 +74,9 @@
                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                 </svg>
-                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No subjects found</h3>
+                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Tidak ada mata pelajaran</h3>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    {{ auth()->user()->role === 'teacher' ? 'You are not assigned to any subjects yet.' : 'You are not enrolled in any subjects yet.' }}
+                    {{ auth()->user()->role === 'teacher' ? 'Anda belum ditugaskan ke mata pelajaran apapun.' : 'Anda belum terdaftar di mata pelajaran apapun.' }}
                 </p>
             </div>
         @endforelse
