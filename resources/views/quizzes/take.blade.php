@@ -9,7 +9,7 @@
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-4">
                 <div class="text-sm font-medium text-gray-700 dark:text-gray-300">Time Remaining:</div>
-                <div id="timer" class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ $quiz->time_limit }}:00</div>
+                <div id="timer" class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ $quiz->duration_minutes }}:00</div>
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400">
                 Question <span id="currentQuestion">1</span> of {{ $quiz->questions->count() }}
@@ -128,7 +128,7 @@
 <script>
 let currentQuestion = 1;
 let totalQuestions = {{ $quiz->questions->count() }};
-let timeLimit = {{ $quiz->time_limit * 60 }}; // Convert to seconds
+let timeLimit = {{ $quiz->duration_minutes * 60 }}; // Convert to seconds
 let timeRemaining = timeLimit;
 let timerInterval;
 

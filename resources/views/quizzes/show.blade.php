@@ -19,7 +19,7 @@
                     <div class="text-sm text-gray-600 dark:text-gray-400">Questions</div>
                 </div>
                 <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <div class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ $quiz->time_limit }}</div>
+                    <div class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ $quiz->duration_minutes }}</div>
                     <div class="text-sm text-gray-600 dark:text-gray-400">Minutes</div>
                 </div>
                 <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -39,7 +39,7 @@
                         <h3 class="text-sm font-medium text-blue-800 dark:text-blue-200">Instructions</h3>
                         <div class="mt-2 text-sm text-blue-700 dark:text-blue-300">
                             <ul class="list-disc list-inside space-y-1">
-                                <li>You have {{ $quiz->time_limit }} minutes to complete this quiz</li>
+                                <li>You have {{ $quiz->duration_minutes }} minutes to complete this quiz</li>
                                 <li>The quiz will auto-submit when time runs out</li>
                                 <li>You can only take this quiz once</li>
                                 <li>All questions must be answered</li>
