@@ -4,6 +4,8 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\GradeController;
+use App\Http\Controllers\AttendanceController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,4 +26,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/quizzes/{quiz}/take', [QuizController::class, 'take'])->name('quizzes.take');
     Route::post('/quizzes/{quiz}/submit', [QuizController::class, 'submit'])->name('quizzes.submit');
     Route::get('/quizzes/{quiz}/result', [QuizController::class, 'result'])->name('quizzes.result');
+    
+    Route::get('/grades', [GradeController::class, 'index'])->name('grades.index');
+    
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+    Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
+    Route::get('/api/subjects/{subject}/students', [AttendanceController::class, 'getStudentsBySubject']);
 });
