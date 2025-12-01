@@ -6,6 +6,8 @@ use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\ParentController;
+use App\Http\Controllers\AnnouncementController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -32,4 +34,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
     Route::get('/api/subjects/{subject}/students', [AttendanceController::class, 'getStudentsBySubject']);
+    
+    Route::get('/parent/children', [ParentController::class, 'children'])->name('parent.children');
+    Route::get('/parent/children/{child}', [ParentController::class, 'childDetails'])->name('parent.child.details');
+    
+    Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
+    Route::get('/announcements/create', [AnnouncementController::class, 'create'])->name('announcements.create');
+    Route::post('/announcements', [AnnouncementController::class, 'store'])->name('announcements.store');
+    Route::delete('/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
 });
